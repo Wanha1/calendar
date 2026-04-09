@@ -1,0 +1,17 @@
+name: build
+
+on:
+workflow_dispatch:
+
+jobs:
+build:
+runs-on: ubuntu-latest
+steps:
+- uses: actions/checkout@v3
+- run: pip install lunardate
+- run: python generate.py
+- run: git config --global user.name "bot"
+- run: git config --global user.email "[bot@github.com](mailto:bot@github.com)"
+- run: git add calendar.ics
+- run: git commit -m "update" || echo ok
+- run: git push
