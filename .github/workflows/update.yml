@@ -1,37 +1,22 @@
-name: Auto Update Calendar
+name: build-calendar
 
-on:
-workflow_dispatch:
-schedule:
-- cron: '0 0 1 1 *'
+on: [workflow_dispatch]
 
 jobs:
 build:
 runs-on: ubuntu-latest
+steps:
+- uses: actions/checkout@v3
 
 ```
-steps:
-  - name: Checkout
-    uses: actions/checkout@v3
+  - run: pip install lunardate
 
-  - name: Setup Python
-    uses: actions/setup-python@v4
-    with:
-      python-version: '3.10'
+  - run: python generate.py
 
-  - name: Install dependencies
-    run: |
-      pip install lunardate
-
-  - name: Generate calendar
-    run: |
-      python generate.py
-
-  - name: Commit changes
-    run: |
-      git config --global user.name "github-actions"
-      git config --global user.email "actions@github.com"
+  - run: |
+      git config --global user.name "bot"
+      git config --global user.email "bot@github.com"
       git add calendar.ics
-      git commit -m "Auto update calendar" || echo "No changes"
+      git commit -m "update" || echo ok
       git push
 ```
